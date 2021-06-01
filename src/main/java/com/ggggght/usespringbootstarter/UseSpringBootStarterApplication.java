@@ -1,11 +1,15 @@
 package com.ggggght.usespringbootstarter;
 
 import com.gggggght.formatterspringbootstarter.service.Formatter;
+import com.ggggght.usespringbootstarter.event.MyApplicationEvent;
+import com.ggggght.usespringbootstarter.event.MyApplicationListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 
@@ -26,73 +30,33 @@ public class UseSpringBootStarterApplication implements ApplicationRunner, Comma
 
 
 	public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException, IOException {
-		// LocalDateTime start = LocalDateTime.now();
-		// CompletableFuture<Double> future = CompletableFuture.supplyAsync(UseSpringBootStarterApplication::randomInt).
-		// 		thenCombine(CompletableFuture.supplyAsync(UseSpringBootStarterApplication::randomDouble), (i, d) -> i * d);
-
-		// System.out.println(future.get(1, TimeUnit.MINUTES));
-		// System.out.println(Duration.between(start,LocalDateTime.now()).toSeconds());
-
-
-		// CompletableFuture.supplyAsync(UseSpringBootStarterApplication::randomInt).thenAccept(t -> System.out.printf("int is %d\n", t));
-
-		// List<Long> list = List.of(1L, 2L, 3L, 4L);
-		// StringJoiner joiner = new StringJoiner(",");
-		// list.stream().map(Objects::toString).forEach(joiner::add);
-		// System.out.println("joiner.toString() = " + joiner.toString());
-		// List<Integer> list2 = List.of(5, 6, 7, 9);
-		// joiner = new StringJoiner(",");
-		// list2.stream().map(Object::toString).forEach(joiner::add);
-		// System.out.println("joiner = " + joiner);
 		// SpringApplicationBuilder builder = new SpringApplicationBuilder(UseSpringBootStarterApplication.class);
+		// builder.bannerMode(Banner.Mode.OFF);
+		// builder.logStartupInfo(false);
+		// builder.web(WebApplicationType.NONE);
 		// builder.run(args);
-		//
-		// builder.web(WebApplicationType.NONE).run(args);
-		// SpringApplication.run(UseSpringBootStarterApplication.class, args);
-		// StackTraceElement[] stackTrace = new RuntimeException().getStackTrace();
-		// for (StackTraceElement stackTraceElement : stackTrace) {
-		// 	if ("main".equals(stackTraceElement.getMethodName())) {
-		// 		try {
-		// 			System.out.println(Class.forName(stackTraceElement.getClassName()));
-		// 		} catch (ClassNotFoundException e) {
-		// 			for (StackTraceElement traceElement : e.getException().getStackTrace()) {
-		//
-		// 				System.out.println("traceElement.getMethodName() = " + traceElement.getMethodName());
-		// 				System.out.println("traceElement.getClassName() = " + traceElement.getClassName());
-		// 				System.out.println();
-		// 			}
-		// 			e.printStackTrace();
-		// 		}
-		// 	}
-		// }
+		GenericApplicationContext applicationContext = new GenericApplicationContext();
+		System.out.println("applicationContext.getDisplayName() = " + applicationContext.getDisplayName());
+		applicationContext.addApplicationListener(applicationEvent -> System.out.println("触发事件: " + applicationEvent.getClass().getSimpleName()));
+		applicationContext.registerBean(MyApplicationListener.class);
 
-		// try {
-		// 	int i = 1 / 0;
-		// } catch (Exception e) {
-		// 	for (StackTraceElement traceElement : e.getStackTrace()) {
-		// 		System.out.println("traceElement.getMethodName() = " + traceElement.getMethodName());
-		// 		System.out.println("traceElement.getClassName() = " + traceElement.getClassName());
-		// 		System.out.println();
-		// 	}
-		//
-		// }
+		System.out.println("应用上下文准备初始化...");
+		applicationContext.refresh();
+		System.out.println("应用上下文初始化完成!");
 
-		List<Integer> list = List.of(1, 2, 3, 4, 5, 6, 7, 8);
-		// IntStream.rangeClosed(0,list.size()/2).forEach(i -> {
-		// });
-		// Map<Integer, Integer> map = Map.of(1, 1, 2, 2, 3, 3, 4, 4, 7, 7, 10, 10);
-		Map<Integer, Integer> map = new HashMap<>();
+		applicationContext.publishEvent(new MyApplicationEvent("hello","localhost","content: hello world!"));
+		// System.out.println("应用上下文准备停止");
+		// applicationContext.stop();
+		// System.out.println("应用上下文停止完成!");
 
-		for (int i = 0; i < 10; i++) {
-			map.put(i, i);
-		}
-		list.forEach(key -> map.remove(key));
-		// Iterator<Integer> iterator = list.iterator();
-		// while (iterator.hasNext()) {
-		// 	map.remove(iterator.next());
-		// }
+		// System.out.println("应用上下文准备启动...");
+		// applicationContext.start();
+		// System.out.println("应用上下文启动完成!");
 
-		map.entrySet().forEach(k -> System.out.println("key: " + k.getKey() + ", v: " + k.getValue()));
+		// System.out.println("应用上下文准备关闭");
+		applicationContext.close();
+		// System.out.println("应用上下文关闭完成!");
+		applicationContext.publishEvent(new MyApplicationEvent("hello again","localhost","content: hello world!"));
 	}
 
 	@Autowired
