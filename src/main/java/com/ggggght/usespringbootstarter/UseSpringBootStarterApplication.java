@@ -30,11 +30,13 @@ public class UseSpringBootStarterApplication implements ApplicationRunner, Comma
 
 
 	public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException, IOException {
-		// SpringApplicationBuilder builder = new SpringApplicationBuilder(UseSpringBootStarterApplication.class);
-		// builder.bannerMode(Banner.Mode.OFF);
-		// builder.logStartupInfo(false);
-		// builder.web(WebApplicationType.NONE);
-		// builder.run(args);
+		SpringApplicationBuilder builder = new SpringApplicationBuilder(UseSpringBootStarterApplication.class);
+		builder.bannerMode(Banner.Mode.OFF);
+		builder.logStartupInfo(false);
+		builder.web(WebApplicationType.NONE);
+		builder.initializers(new HelloWorldApplicationContextInitializer());
+		builder.initializers(new HelloWorldApplicationContextInitializer());
+		builder.run(args);
 		GenericApplicationContext applicationContext = new GenericApplicationContext();
 		System.out.println("applicationContext.getDisplayName() = " + applicationContext.getDisplayName());
 		applicationContext.addApplicationListener(applicationEvent -> System.out.println("触发事件: " + applicationEvent.getClass().getSimpleName()));
@@ -45,17 +47,17 @@ public class UseSpringBootStarterApplication implements ApplicationRunner, Comma
 		System.out.println("应用上下文初始化完成!");
 
 		applicationContext.publishEvent(new MyApplicationEvent("hello","localhost","content: hello world!"));
-		// System.out.println("应用上下文准备停止");
-		// applicationContext.stop();
-		// System.out.println("应用上下文停止完成!");
+		System.out.println("应用上下文准备停止");
+		applicationContext.stop();
+		System.out.println("应用上下文停止完成!");
 
-		// System.out.println("应用上下文准备启动...");
-		// applicationContext.start();
-		// System.out.println("应用上下文启动完成!");
+		System.out.println("应用上下文准备启动...");
+		applicationContext.start();
+		System.out.println("应用上下文启动完成!");
 
-		// System.out.println("应用上下文准备关闭");
+		System.out.println("应用上下文准备关闭");
 		applicationContext.close();
-		// System.out.println("应用上下文关闭完成!");
+		System.out.println("应用上下文关闭完成!");
 		applicationContext.publishEvent(new MyApplicationEvent("hello again","localhost","content: hello world!"));
 	}
 
