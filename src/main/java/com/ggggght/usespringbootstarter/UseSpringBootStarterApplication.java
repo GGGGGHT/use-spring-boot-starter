@@ -1,6 +1,7 @@
 package com.ggggght.usespringbootstarter;
 
 import com.gggggght.formatterspringbootstarter.service.Formatter;
+import com.ggggght.usespringbootstarter.event.ApplicationPreparedEventListener;
 import com.ggggght.usespringbootstarter.event.MyApplicationEvent;
 import com.ggggght.usespringbootstarter.event.MyApplicationListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class UseSpringBootStarterApplication implements ApplicationRunner, Comma
 		builder.bannerMode(Banner.Mode.OFF);
 		builder.logStartupInfo(false);
 		builder.web(WebApplicationType.NONE);
+		builder.listeners(new ApplicationPreparedEventListener());
 		builder.initializers(new HelloWorldApplicationContextInitializer());
 		builder.initializers(new HelloWorldApplicationContextInitializer());
 		builder.run(args);
