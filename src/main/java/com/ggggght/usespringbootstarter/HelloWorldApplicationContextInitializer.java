@@ -9,4 +9,14 @@ public class HelloWorldApplicationContextInitializer implements ApplicationConte
 	public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
 		System.out.println("HelloWorldApplicationContextInitializer: hello world!");
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return getClass().equals(obj.getClass());
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
+	}
 }
