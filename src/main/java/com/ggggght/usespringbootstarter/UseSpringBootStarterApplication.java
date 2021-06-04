@@ -30,37 +30,43 @@ public class UseSpringBootStarterApplication implements ApplicationRunner, Comma
 	StringRedisTemplate redisTemplate;
 
 
-	public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException, IOException {
-		SpringApplicationBuilder builder = new SpringApplicationBuilder(UseSpringBootStarterApplication.class);
-		builder.bannerMode(Banner.Mode.OFF);
-		builder.logStartupInfo(false);
-		builder.web(WebApplicationType.NONE);
-		builder.listeners(new ApplicationPreparedEventListener());
-		builder.initializers(new HelloWorldApplicationContextInitializer());
-		builder.initializers(new HelloWorldApplicationContextInitializer());
-		builder.run(args);
-		GenericApplicationContext applicationContext = new GenericApplicationContext();
-		System.out.println("applicationContext.getDisplayName() = " + applicationContext.getDisplayName());
-		applicationContext.addApplicationListener(applicationEvent -> System.out.println("触发事件: " + applicationEvent.getClass().getSimpleName()));
-		applicationContext.registerBean(MyApplicationListener.class);
-
-		System.out.println("应用上下文准备初始化...");
-		applicationContext.refresh();
-		System.out.println("应用上下文初始化完成!");
-
-		applicationContext.publishEvent(new MyApplicationEvent("hello","localhost","content: hello world!"));
-		System.out.println("应用上下文准备停止");
-		applicationContext.stop();
-		System.out.println("应用上下文停止完成!");
-
-		System.out.println("应用上下文准备启动...");
-		applicationContext.start();
-		System.out.println("应用上下文启动完成!");
-
-		System.out.println("应用上下文准备关闭");
-		applicationContext.close();
-		System.out.println("应用上下文关闭完成!");
-		applicationContext.publishEvent(new MyApplicationEvent("hello again","localhost","content: hello world!"));
+	public static void main(String[] args) {
+		new SpringApplicationBuilder(Object.class).initializers(context -> {
+			throw new UnknownError("抛出异常 查看分析器与报告器的结果");
+		}).web(WebApplicationType.NONE).run(args).close();
+		// SpringApplicationBuilder builder = new SpringApplicationBuilder(UseSpringBootStarterApplication.class);
+		// builder.bannerMode(Banner.Mode.OFF);
+		// builder.logStartupInfo(false);
+		// builder.web(WebApplicationType.NONE);
+		// builder.listeners(new ApplicationPreparedEventListener());
+		// builder.initializers(context -> {
+		// 	throw new UnknownError("抛出异常 查看分析器与报告器的结果");
+		// });
+		// builder.initializers(new HelloWorldApplicationContextInitializer());
+		// builder.initializers(new HelloWorldApplicationContextInitializer());
+		// builder.run(args);
+		// GenericApplicationContext applicationContext = new GenericApplicationContext();
+		// System.out.println("applicationContext.getDisplayName() = " + applicationContext.getDisplayName());
+		// applicationContext.addApplicationListener(applicationEvent -> System.out.println("触发事件: " + applicationEvent.getClass().getSimpleName()));
+		// applicationContext.registerBean(MyApplicationListener.class);
+		//
+		// System.out.println("应用上下文准备初始化...");
+		// applicationContext.refresh();
+		// System.out.println("应用上下文初始化完成!");
+		//
+		// applicationContext.publishEvent(new MyApplicationEvent("hello","localhost","content: hello world!"));
+		// System.out.println("应用上下文准备停止");
+		// applicationContext.stop();
+		// System.out.println("应用上下文停止完成!");
+		//
+		// System.out.println("应用上下文准备启动...");
+		// applicationContext.start();
+		// System.out.println("应用上下文启动完成!");
+		//
+		// System.out.println("应用上下文准备关闭");
+		// applicationContext.close();
+		// System.out.println("应用上下文关闭完成!");
+		// applicationContext.publishEvent(new MyApplicationEvent("hello again","localhost","content: hello world!"));
 	}
 
 	@Autowired
