@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
@@ -26,14 +27,13 @@ import static java.lang.Thread.*;
 
 @SpringBootApplication
 public class UseSpringBootStarterApplication implements ApplicationRunner, CommandLineRunner {
-	@Autowired
-	StringRedisTemplate redisTemplate;
+	// @Autowired
+	// StringRedisTemplate redisTemplate;
 
 
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(Object.class).initializers(context -> {
-			throw new UnknownError("抛出异常 查看分析器与报告器的结果");
-		}).web(WebApplicationType.NONE).run(args).close();
+		System.exit(SpringApplication.exit(SpringApplication.run(UseSpringBootStarterApplication.class, args)));
+		// new SpringApplicationBuilder(UseSpringBootStarterApplication.class).web(WebApplicationType.NONE).run(args).close();
 		// SpringApplicationBuilder builder = new SpringApplicationBuilder(UseSpringBootStarterApplication.class);
 		// builder.bannerMode(Banner.Mode.OFF);
 		// builder.logStartupInfo(false);
@@ -81,37 +81,6 @@ public class UseSpringBootStarterApplication implements ApplicationRunner, Comma
 
 	@Override
 	public void run(String... args) throws Exception {
-		Map<String, String> map = Map.of("k1", "v1", "k2", "v2");
-		redisTemplate.opsForHash().putAll("hashkey",map);
-
-		sleep(2000L);
-		Map<Object, Object> hashkey = redisTemplate.opsForHash().entries("hashkey");
-		for (Map.Entry<Object, Object> entry : hashkey.entrySet()) {
-			System.out.println("key: " + entry.getKey().toString() + ", value: " + entry.getValue().toString());
-		}
-
-		sleep(300L);
-		map = Map.of("k1","","k2","");
-		redisTemplate.opsForHash().putAll("hashkey",map);
-		sleep(2000L);
-		System.out.printf("key \t value \n");
-		hashkey = redisTemplate.opsForHash().entries("hashkey");
-		for (Map.Entry<Object, Object> entry : hashkey.entrySet()) {
-			System.out.println("key: " + entry.getKey().toString() + ", value: " + entry.getValue().toString());
-		}
-		// Map<String, Object> map = new HashMap<>();
-		// map.put("name", "zhangsan");
-		// // Formatter formatter = context.getBean(Formatter.class);
-		// Map<String, Formatter> beans = context.getBeansOfType(Formatter.class);
-		// if (CollectionUtils.isEmpty(beans)) {
-		// 	return;
-		// }
-		//
-		// System.out.println();
-		// beans.forEach((name, formatter) -> {
-		// 	System.out.printf("[Bean name: %s] %s.format(data): %s\n", name,formatter.getClass().getSimpleName(), formatter.format(map));
-		// });
-		// System.out.printf("%s.format(data): %s\n", formatter.getClass().getSimpleName(), formatter.format(map));
 	}
 
 	public Future<String> getHelloWorldAsync() {
@@ -140,5 +109,15 @@ public class UseSpringBootStarterApplication implements ApplicationRunner, Comma
 		return new Random().nextDouble();
 	}
 
+	@Bean
+	ExitCodeGenerator exitCodeGenerator() {
+		System.out.println("ExitCodeGenerator bean created");
+
+		return () -> {
+			System.out.println("执行退出码(33)生成");
+
+			return 33;
+		};
+	}
 }
 
